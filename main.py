@@ -11,7 +11,7 @@ from kivymd.uix.list import (MDListItem,
                              MDListItemLeadingIcon, )
 
 # from kivymd.uix.button import MDButton, MDButtonText
-from kivymd.uix.floatlayout import MDFloatLayout
+# from kivymd.uix.floatlayout import MDFloatLayout
 
 
 class BudgetInterface(MDBoxLayout):
@@ -54,7 +54,7 @@ class BudgetInterface(MDBoxLayout):
             self.ids.amount.text = ''
 
 
-    def add_items(self):
+    def add_items_debug(self):
         data = {
                 'Location': [
                     'Burger Palace',
