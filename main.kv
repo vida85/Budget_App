@@ -1,0 +1,125 @@
+#:import MDActionBottomAppBarButton kivymd.uix.appbar.MDActionBottomAppBarButton
+
+BudgetInterface:
+    orientation: 'vertical'
+    md_bg_color: self.theme_cls.backgroundColor
+    # md_bg_color: self.theme_cls.secondaryContainerColor
+
+    MDTopAppBar:
+        type: "small"
+        pos_hint: {'top': 1}
+
+        MDTopAppBarLeadingButtonContainer:
+            MDActionTopAppBarButton:
+                icon: "menu"
+
+        MDTopAppBarTitle:
+            text: "Budget Tracking"
+            pos_hint: {"center_x": .5}
+
+        MDTopAppBarTrailingButtonContainer:
+            MDActionTopAppBarButton:
+                icon: "account-circle-outline"
+                on_release: root.add_items()
+
+    MDBoxLayout:
+        orientation: "vertical"
+
+        MDBoxLayout:
+            padding: dp(10)
+
+            MDLabel:
+                text: 'Total: '
+                padding: "10dp", "20dp", 0, 0
+            MDLabel:
+                id: total
+                text: '...'
+                padding: "10dp", "20dp", 0, 0
+            MDButton:
+                pos_hint: {"center_y": .5}
+                padding: dp(20)
+                MDIconButton:
+                    icon: "bank"
+                MDButtonText:
+                    text: 'Update Income'
+        
+        MDBoxLayout:
+            orientation: 'vertical'
+            spacing: '30dp'
+            pos_hint: {'center_x': 0.5,'center_y': 0.0}
+
+            MDTextField:
+                id: item
+                mode: "outlined"
+                MDTextFieldLeadingIcon:
+                    icon: 'location-enter'
+
+                MDTextFieldHintText:
+                    text: "Location"
+
+                MDTextFieldHelperText:
+                    text: "Transaction Location"
+                    mode: "persistent"
+
+                MDTextFieldTrailingIcon:
+                    icon: "information"
+
+            MDTextField:
+                id: description
+                mode: "outlined"
+
+                MDTextFieldLeadingIcon:
+                    icon: 'notebook-edit'
+
+                MDTextFieldHintText:
+                    text: "Groceries..."
+
+                MDTextFieldHelperText:
+                    text: "Description of Purchase"
+                    mode: "persistent"
+
+                MDTextFieldTrailingIcon:
+                    icon: "information"
+
+            MDTextField:
+                id: amount
+                mode: "outlined"
+
+                MDTextFieldLeadingIcon:
+                    icon: 'cash'
+
+                MDTextFieldHintText:
+                    text: "$123.12"
+
+                MDTextFieldHelperText:
+                    text: "Amount"
+                    mode: "persistent"
+
+                MDTextFieldTrailingIcon:
+                    icon: "information"
+
+            MDTextFieldMaxLengthText:
+                max_text_length: 10
+
+            MDButton:
+                on_release: root.add_item()
+                MDButtonIcon:
+                    icon: "plus"
+                MDButtonText:
+                    text: 'Add Item'
+        MDScreen:
+            MDScrollView:
+                MDBoxLayout:
+                    id: item_list
+                    orientation: 'vertical'
+                    md_bg_color: app.theme_cls.backgroundColor
+
+    MDButton:
+        spacing: '20dp'
+        pos_hint: {"center_y": 1}
+        on_release: app.switch_theme_style()
+        MDIconButton:
+            icon: "theme-light-dark"
+        MDButtonText:
+            text: str(app.theme_cls.theme_style)
+
