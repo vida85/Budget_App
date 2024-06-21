@@ -34,7 +34,7 @@ BudgetInterface:
         MDButton:
             pos_hint: {"center_y": .5}
             padding: '20dp'
-            on_release: root.update_income()
+            on_release: root.update_total_expenses(root.ids.amount.text)
             MDIconButton:
                 icon: "bank"
             MDButtonText:

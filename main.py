@@ -49,23 +49,39 @@ class BudgetInterface(MDBoxLayout):
                                     MDListItemTrailingCheckbox(icon='checkbox-blank-outline', ),
                                     pos_hint={"center_x": .5, "center_y": .5}, size_hint_x=0.8,),
                                     )
-            
-            self.total += float(amount)
+            self.update_total_expenses(amount=amount)
+            self.ids.item.text = '0'
+            self.ids.description.text = '0'
+            self.ids.amount.text = '0'
+    
+    
+    def update_total_expenses(self, amount: float | str):
+            try:
+                amount = float(amount)
+            except ValueError:
+                print('Must be numbers only')
+                return
+            self.total += amount
             self.update_income(value=self.total)
             self.ids.total.text = str(f"Total Expenses: ${round(self.total, 2)}")
     
-            self.ids.item.text = ''
-            self.ids.description.text = ''
-            self.ids.amount.text = ''
+    
     
     def update_income(self, value: float=0):
         if value:
-            income = float(self.ids.income.text)
+            try:
+                income = float(self.ids.income.text)
+            except ValueError:
+                income = 0
             result = round(income - value, 2)
         else:
-            result = self.ids.income.text
-
-        self.ids.balance.text = f'Balance: ${result}'
+            try:
+                result = float(self.ids.income.text)
+            except ValueError:
+                result = 0
+                
+        amount = float(self.ids.amount.text)
+        self.ids.balance.text = f'Balance: ${result - amount}'
 
 
     def add_items_debug(self):
