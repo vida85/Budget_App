@@ -10,8 +10,6 @@ from kivymd.uix.list import (MDListItem,
                              MDListItemTrailingCheckbox,
                              MDListItemLeadingIcon, )
 
-# from kivymd.uix.button import MDButton, MDButtonText
-# from kivymd.uix.floatlayout import MDFloatLayout
 
 
 class BudgetInterface(MDBoxLayout):
