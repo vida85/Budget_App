@@ -24,31 +24,36 @@ BudgetInterface:
 
     MDBoxLayout:
         orientation: "vertical"
-        spacing: '50dp'
-        padding: dp(70)
+        spacing: '30dp'
+        padding: dp(5)
+        MDTextField:
+            id: income
+            mode: "outlined"
+            MDTextFieldLeadingIcon:
+                icon: 'cash-plus'
+        MDButton:
+            pos_hint: {"center_y": .5}
+            padding: '20dp'
+            on_release: root.update_income()
+            MDIconButton:
+                icon: "bank"
+            MDButtonText:
+                text: 'Update Income'
         MDBoxLayout:
-            spacing: '30dp'
-            padding: dp(50)
+            padding: '10dp'
             MDLabel:
-                text: 'Total: '
-                padding: "10dp", "20dp", 0, 0
+                id: balance
+                text: 'Balance: ...'
             MDLabel:
                 id: total
-                text: '...'
-                padding: "10dp", "20dp", 0, 0
-            MDButton:
-                pos_hint: {"center_y": .5}
-                padding: dp(20)
-                MDIconButton:
-                    icon: "bank"
-                MDButtonText:
-                    text: 'Update Income'
+                text: 'Total Expenses: ...'
         
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: '30dp'
+            spacing: '40dp'
             pos_hint: {'center_x': 0.5,'center_y': 0.0}
-            padding: dp(50)
+            padding: dp(5)
+
             MDTextField:
                 id: item
                 mode: "outlined"
@@ -59,11 +64,8 @@ BudgetInterface:
                     text: "Location"
 
                 MDTextFieldHelperText:
-                    text: "Transaction Location"
-                    mode: "persistent"
-
-                MDTextFieldTrailingIcon:
-                    icon: "information"
+                    text: "Location of Transaction"
+                    mode: "on_focus"
 
             MDTextField:
                 id: description
@@ -73,14 +75,11 @@ BudgetInterface:
                     icon: 'notebook-edit'
 
                 MDTextFieldHintText:
-                    text: "Groceries..."
+                    text: "Description"
 
                 MDTextFieldHelperText:
                     text: "Description of Purchase"
-                    mode: "persistent"
-
-                MDTextFieldTrailingIcon:
-                    icon: "information"
+                    mode: "on_focus"
 
             MDTextField:
                 id: amount
@@ -90,14 +89,12 @@ BudgetInterface:
                     icon: 'cash'
 
                 MDTextFieldHintText:
-                    text: "$123.12"
+                    text: "$..."
 
                 MDTextFieldHelperText:
                     text: "Amount"
-                    mode: "persistent"
+                    mode: "on_focus"
 
-                MDTextFieldTrailingIcon:
-                    icon: "information"
 
             MDTextFieldMaxLengthText:
                 max_text_length: 10

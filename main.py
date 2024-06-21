@@ -15,9 +15,15 @@ from kivymd.uix.list import (MDListItem,
 
 
 class BudgetInterface(MDBoxLayout):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.padding = sp(30)
+        self.spacing = sp(10)
     total = 0
+    
     def add_item(self, debug=False, i='', d='', a=''):
         if debug:
+            
             item = i
             description = d
             amount: str = a
@@ -25,7 +31,7 @@ class BudgetInterface(MDBoxLayout):
             item = self.ids.item.text
             description = self.ids.description.text
             amount: str = self.ids.amount.text
-        
+
         try:
             amount = amount.split(',')
             amount = float(''.join(amount))
@@ -47,11 +53,21 @@ class BudgetInterface(MDBoxLayout):
                                     )
             
             self.total += float(amount)
-            self.ids.total.text = str(f"${round(self.total, 2)}")
+            self.update_income(value=self.total)
+            self.ids.total.text = str(f"Total Expenses: ${round(self.total, 2)}")
     
             self.ids.item.text = ''
             self.ids.description.text = ''
             self.ids.amount.text = ''
+    
+    def update_income(self, value: float=0):
+        if value:
+            income = float(self.ids.income.text)
+            result = round(income - value, 2)
+        else:
+            result = self.ids.income.text
+
+        self.ids.balance.text = f'Balance: ${result}'
 
 
     def add_items_debug(self):
@@ -98,23 +114,11 @@ class MainApp(MDApp):
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Teal"
         Window.size = [sp(600), sp(1140)]
-        
-        LabelBase.register(
-            name="corbell",
-            fn_regular="fonts/corbell.ttf", )
 
         LabelBase.register(
             name="corbelb",
             fn_regular="fonts/corbelb.ttf", )
 
-        self.theme_cls.font_styles["corbell"] = {
-            "large": {
-                "line-height": 1.64,
-                "font-name": "corbell",
-                "font-size": sp(14),
-            },
-
-        }
         self.theme_cls.font_styles["corbelb"] = {
             "large": {
                 "line-height": 1.64,

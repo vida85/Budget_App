@@ -84,7 +84,7 @@ class PreviousMDIcons(MDScreen):
                 add_icon_item(name_icon)
 
 
-class MainApp(MDApp):
+class Main_App(MDApp):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.screen = PreviousMDIcons()
@@ -96,4 +96,4 @@ class MainApp(MDApp):
         self.screen.set_list_md_icons()
 
 
-MainApp().run()
+Main_App().run()
