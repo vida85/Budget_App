@@ -24,10 +24,11 @@ BudgetInterface:
 
     MDBoxLayout:
         orientation: "vertical"
-
+        spacing: '50dp'
+        padding: dp(70)
         MDBoxLayout:
-            padding: dp(10)
-
+            spacing: '30dp'
+            padding: dp(50)
             MDLabel:
                 text: 'Total: '
                 padding: "10dp", "20dp", 0, 0
@@ -47,7 +48,7 @@ BudgetInterface:
             orientation: 'vertical'
             spacing: '30dp'
             pos_hint: {'center_x': 0.5,'center_y': 0.0}
-
+            padding: dp(50)
             MDTextField:
                 id: item
                 mode: "outlined"
