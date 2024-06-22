@@ -50,8 +50,8 @@ class BudgetInterface(MDBoxLayout):
                                     pos_hint={"center_x": .5, "center_y": .5}, size_hint_x=0.8,),
                                     )
             self.update_total_expenses(amount=amount)
-            self.ids.item.text = '0'
-            self.ids.description.text = '0'
+            self.ids.item.text = ''
+            self.ids.description.text = ''
             self.ids.amount.text = '0'
     
     
@@ -64,8 +64,7 @@ class BudgetInterface(MDBoxLayout):
             self.total += amount
             self.update_income(value=self.total)
             self.ids.total.text = str(f"Total Expenses: ${round(self.total, 2)}")
-    
-    
+
     
     def update_income(self, value: float=0):
         if value:
@@ -79,9 +78,8 @@ class BudgetInterface(MDBoxLayout):
                 result = float(self.ids.income.text)
             except ValueError:
                 result = 0
-                
-        amount = float(self.ids.amount.text)
-        self.ids.balance.text = f'Balance: ${result - amount}'
+
+        self.ids.balance.text = f'Balance: ${result}'
 
 
 
