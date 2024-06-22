@@ -84,6 +84,7 @@ class BudgetInterface(MDBoxLayout):
         self.ids.balance.text = f'Balance: ${result - amount}'
 
 
+
     def add_items_debug(self):
         data = {
                 'Location': [
