@@ -10,6 +10,39 @@ from kivymd.uix.list import (MDListItem,
                              MDListItemTrailingCheckbox,
                              MDListItemLeadingIcon, )
 
+import os
+import json
+
+
+cwd = os.path.dirname(os.path.abspath(__file__))
+json_file_path = os.path.join(cwd, "budget_data.json")
+
+
+
+def load_data() -> json:
+    with open(json_file_path, 'r') as json_file:
+        data = json.load(json_file)
+        return data
+
+
+def save_data(data: json) -> True:
+    with open(json_file_path, 'w') as json_file:
+        json.dump(data, json_file, indent=4)
+        return True
+
+
+
+if os.path.exists(json_file_path):
+    data = load_data()
+else:
+    data = {
+        "budget": 0,
+        "total": 0,
+        "balance": 0,
+    }
+    save_data(data)
+
+
 
 
 class BudgetInterface(MDBoxLayout):
