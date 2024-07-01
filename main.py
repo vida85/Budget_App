@@ -12,6 +12,8 @@ from kivymd.uix.list import (MDListItem,
 
 import os
 import json
+from typing import Any, Dict
+
 
 
 cwd = os.path.dirname(os.path.abspath(__file__))
@@ -25,10 +27,10 @@ def load_data() -> json:
         return data
 
 
-def save_data(data: json) -> True:
-    with open(json_file_path, 'w') as json_file:
+def save_data(data: Dict[str, Any], file_path: str=json_file_path) -> True:
+    with open(file_path, 'w') as json_file:
         json.dump(data, json_file, indent=4)
-        return True
+    return True
 
 
 
@@ -36,12 +38,13 @@ if os.path.exists(json_file_path):
     data = load_data()
 else:
     data = {
-        "budget": 0,
-        "total": 0,
-        "balance": 0,
+        "budget": None,
+        "balance": None,
+        "items": {"item": None,
+                  "description": None,
+                  "amount": None},
     }
     save_data(data)
-
 
 
 
@@ -50,18 +53,16 @@ class BudgetInterface(MDBoxLayout):
         super().__init__(*args, **kwargs)
         self.padding = sp(30)
         self.spacing = sp(10)
-    total = 0
+
+        self.total = 0
+        self.balance = 0
+        self.budget = 0
+        self.items = []
     
     def add_item(self, debug=False, i='', d='', a=''):
-        if debug:
-            
-            item = i
-            description = d
-            amount: str = a
-        else:
-            item = self.ids.item.text
-            description = self.ids.description.text
-            amount: str = self.ids.amount.text
+        item = self.ids.item.text
+        description = self.ids.description.text
+        amount: str = self.ids.amount.text
 
         try:
             amount = amount.split(',')
@@ -74,18 +75,20 @@ class BudgetInterface(MDBoxLayout):
             print("All fields are required")
             return
         else:
-            self.ids.item_list.add_widget(MDListItem(
-                                    MDListItemHeadlineText(text=item, ),
-                                    MDListItemLeadingIcon(icon='cash', ),
-                                    MDListItemSupportingText(text=description, ),
-                                    MDListItemTertiaryText(text=f"${amount}", ),
-                                    MDListItemTrailingCheckbox(icon='checkbox-blank-outline', ),
-                                    pos_hint={"center_x": .5, "center_y": .5}, size_hint_x=0.8,),
+            self.ids.item_list.add_widget(
+                                    MDListItem(
+                                        MDListItemHeadlineText(text=item, ),
+                                        MDListItemLeadingIcon(icon='cash', ),
+                                        MDListItemSupportingText(text=description, ),
+                                        MDListItemTertiaryText(text=f"${amount}", ),
+                                        MDListItemTrailingCheckbox(icon='checkbox-blank-outline', ),
+                                        pos_hint={"center_x": .5, "center_y": .5}, size_hint_x=0.8,),
                                     )
             self.update_total_expenses(amount=amount)
+            self.save_data(item, description, amount)
             self.ids.item.text = ''
             self.ids.description.text = ''
-            self.ids.amount.text = '0'
+            self.ids.amount.text = ''
     
     
     def update_total_expenses(self, amount: float | str):
@@ -95,7 +98,7 @@ class BudgetInterface(MDBoxLayout):
                 print('Must be numbers only')
                 return
             self.total += amount
-            self.update_income(value=self.total)
+            self.balance = self.update_income(value=self.total)
             self.ids.total.text = str(f"Total Expenses: ${round(self.total, 2)}")
 
     
@@ -105,56 +108,35 @@ class BudgetInterface(MDBoxLayout):
                 income = float(self.ids.income.text)
             except ValueError:
                 income = 0
-            result = round(income - value, 2)
+            balance = round(income - value, 2)
         else:
             try:
-                result = float(self.ids.income.text)
+                balance = float(self.ids.income.text)
             except ValueError:
-                result = 0
+                balance = 0
 
-        self.ids.balance.text = f'Balance: ${result}'
+        self.ids.balance.text = f'Balance: ${balance}'
+        return balance
 
 
-
-    def add_items_debug(self):
-        data = {
-                'Location': [
-                    'Burger Palace',
-                    'Pizza Haven',
-                    'Sushi World',
-                    'Pasta Paradise',
-                    'Taco Town',
-                    'Steakhouse Grill',
-                    'Vegan Delights',
-                    'Coffee Corner'
-                ],
-                'Description': [
-                    'Fast food',
-                    'Italian',
-                    'Japanese',
-                    'Pasta',
-                    'Mexican',
-                    'Steak',
-                    'Vegan',
-                    'Cafe'
-                ],
-                'Amount': [
-                    '12.50',
-                    '20.00',
-                    '35.75',
-                    '18.40',
-                    '9.99',
-                    '45.00',
-                    '25.30',
-                    '5.50'
-                ]
-            }
-        for i, d, a in zip(data['Location'], data['Description'], data['Amount']):
-            self.add_item(debug=True, i=i, d=d, a=a)
+    def save_data(self, item: str, description: str, amount: str):
+        item = {"item": item,
+                  "description": description,
+                  "amount": amount}
+        self.items.append(item)
+        
+        item_data = {
+            "budget": self.budget,
+            "balance": self.balance,
+            "items": self.items
+                    }
+        save_data(item_data)
     
-    
+
+
 
 class MainApp(MDApp):
+    
     def build(self):
         self.theme_cls.theme_style_switch_animation = True
         self.theme_cls.theme_style = "Light"
