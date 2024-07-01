@@ -58,8 +58,8 @@ class BudgetInterface(MDBoxLayout):
         self.balance = 0
         self.budget = 0
         self.items = []
-    
-    def add_item(self, debug=False, i='', d='', a=''):
+
+    def add_item(self):
         item = self.ids.item.text
         description = self.ids.description.text
         amount: str = self.ids.amount.text
