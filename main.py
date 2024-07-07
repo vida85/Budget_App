@@ -22,6 +22,7 @@ json_file_path = os.path.join(cwd, "budget_data.json")
 
 
 def load_data() -> json:
+    print('loading data')
     with open(json_file_path, 'r') as json_file:
         data = json.load(json_file)
         return data
@@ -36,6 +37,7 @@ def save_data(data: Dict[str, Any], file_path: str=json_file_path) -> True:
 
 if os.path.exists(json_file_path):
     data = load_data()
+    print('data, loaded')
 else:
     data = {
         "budget": None,
@@ -44,6 +46,7 @@ else:
                   "description": None,
                   "amount": None},
     }
+    print('data, empty')
     save_data(data)
 
 
@@ -58,6 +61,21 @@ class BudgetInterface(MDBoxLayout):
         self.balance = 0
         self.budget = 0
         self.items = []
+
+    def __post_init__(self):
+        self.load_items()
+
+
+    def load_items(self):
+        print(data, ' loading file')
+        self.budget = data["budget"]
+        self.balance = data["balance"]
+        self.items = data["items"]
+
+        for item in self.items:
+            print(item["item"], item["description"], item["amount"])
+            self.update_list(item["item"], item["description"], item["amount"])
+        
 
     def add_item(self):
         item = self.ids.item.text
@@ -75,22 +93,26 @@ class BudgetInterface(MDBoxLayout):
             print("All fields are required")
             return
         else:
-            self.ids.item_list.add_widget(
-                                    MDListItem(
-                                        MDListItemHeadlineText(text=item, ),
-                                        MDListItemLeadingIcon(icon='cash', ),
-                                        MDListItemSupportingText(text=description, ),
-                                        MDListItemTertiaryText(text=f"${amount}", ),
-                                        MDListItemTrailingCheckbox(icon='checkbox-blank-outline', ),
-                                        pos_hint={"center_x": .5, "center_y": .5}, size_hint_x=0.8,),
-                                    )
+            self.update_list(self, item, description, amount)
             self.update_total_expenses(amount=amount)
             self.save_data(item, description, amount)
             self.ids.item.text = ''
             self.ids.description.text = ''
             self.ids.amount.text = ''
-    
-    
+
+
+    def update_list(self, item, description, amount):
+        self.ids.item_list.add_widget(
+                        MDListItem(
+                            MDListItemHeadlineText(text=item, ),
+                            MDListItemLeadingIcon(icon='cash', ),
+                            MDListItemSupportingText(text=description, ),
+                            MDListItemTertiaryText(text=f"${amount}", ),
+                            MDListItemTrailingCheckbox(icon='checkbox-blank-outline', ),
+                            pos_hint={"center_x": .5, "center_y": .5}, size_hint_x=0.8,),
+                        )
+
+
     def update_total_expenses(self, amount: float | str):
             try:
                 amount = float(amount)
@@ -131,7 +153,6 @@ class BudgetInterface(MDBoxLayout):
             "items": self.items
                     }
         save_data(item_data)
-    
 
 
 
